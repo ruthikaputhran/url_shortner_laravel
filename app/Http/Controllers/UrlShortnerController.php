@@ -37,7 +37,7 @@ class UrlShortnerController extends Controller
             }
             // Retrieve the user by user_id
             $user = Packages::where('user_id', Auth::id())->first();
-            $isActive = 0; // default
+            //$isActive = 0; // default
             if ($user) {
                 // Check if the user is active
                 if ($user->is_active == 1) {
@@ -46,8 +46,10 @@ class UrlShortnerController extends Controller
                 } else {
                  
                     $countOftotalURL = ShortUrls::where('user_id', Auth::id())->count();
-                    $isActive = ($countOftotalURL >=2) ? 0 : 1;
+                    $isActive = ($countOftotalURL >=10) ? 0 : 1;
                 }
+            }else{
+                $isActive = 1; // new user 
             }
            
             if ($isActive==1) {
@@ -75,7 +77,7 @@ class UrlShortnerController extends Controller
     public function showDataTable()
     {
       //where('user_id', Auth::id())
-        $data =  ShortUrls::get();
+        $data =  ShortUrls::where('user_id',Auth::id())->get();
         return view('urlShortnerList', ['data' => $data]);
     }
 
